@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    jacoco
 }
 
 android {
@@ -20,6 +21,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Habilita a coleta de cobertura nos testes unitários do build debug.
+            enableUnitTestCoverage = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -53,7 +58,50 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    // TESTES UNITÁRIOS (src/test — rodam na JVM, rápidos)
+    // JUnit 4: runner + anotações (@Test, @Before, @After). A base.
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    // Truth: asserts legíveis. assertThat(x).isEqualTo(y).
+    testImplementation(libs.truth)
+    // Mockito + extensão Kotlin: criam dublês das dependências (a Api, o Repository).
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    // Coroutines Test: TestDispatcher e runTest{} — testar coroutines sem delay real.
+    testImplementation(libs.coroutines.test)
+    // Arch core testing: faz LiveData/Arch Components rodarem síncronos no teste.
+    testImplementation(libs.androidx.arch.core.testing)
+
+    // TESTES INSTRUMENTADOS (src/androidTest — Espresso)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+}
+
+// Task que gera o relatório de cobertura, excluindo boilerplate e código gerado.
+tasks.register<JacocoReport>("jacocoTestReport") {
+    // Só roda depois dos testes unitários de debug.
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        html.required.set(true)   // relatório navegável (pra você ler)
+        xml.required.set(true)    // formato máquina (CI, SonarQube)
+    }
+
+    // O que NÃO medir: código gerado e dados puros sem lógica.
+    val excludes = listOf(
+        "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
+        "**/*_Hilt*.*", "**/hilt_aggregated_deps/**",        // gerado pelo Hilt
+        "**/*_Factory.*", "**/*_MembersInjector.*",          // gerado pelo Hilt
+        "**/dto/**",                                         // DTOs: dados, sem lógica
+        "**/databinding/**", "**/*Binding.*"                 // ViewBinding gerado
+    )
+
+    classDirectories.setFrom(
+        fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+            exclude(excludes)
+        }
+    )
+    sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
+    executionData.setFrom(
+        fileTree(layout.buildDirectory.get()) { include("**/*.exec", "**/*.ec") }
+    )
 }
