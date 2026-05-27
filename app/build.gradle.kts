@@ -58,6 +58,11 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    // Networking
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.gson)
+
     // TESTES UNITÁRIOS (src/test — rodam na JVM, rápidos)
     // JUnit 4: runner + anotações (@Test, @Before, @After). A base.
     testImplementation(libs.junit)

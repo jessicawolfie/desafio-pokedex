@@ -11,6 +11,8 @@ appcompat = "1.6.1"
 material = "1.11.0"
 activityKtx = "1.8.2"
 constraintlayout = "2.1.4"
+retrofit = "2.9.0"
+gson = "2.10.1"
 
 # --- versões de teste ---
 truth = "1.4.2"
@@ -30,6 +32,9 @@ androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", ve
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 # --- bibliotecas de teste unitário ---
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
