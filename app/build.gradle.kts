@@ -58,6 +58,16 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    // --- Coroutines: base pra chamadas suspend em runtime ---
+    implementation(libs.coroutines.android)
+
+    // --- Networking ---
+    implementation(libs.retrofit)
+    // Converter Gson: serializa/desserializa JSON <-> DTO Kotlin
+    implementation(libs.retrofit.converter.gson)
+    // Logging interceptor: loga requisições no Logcat (útil pra debug)
+    implementation(libs.okhttp.logging.interceptor)
+
     // Networking
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
