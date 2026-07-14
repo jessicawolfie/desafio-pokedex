@@ -7,7 +7,7 @@ sealed class Result<out T> {
      * Operação bem-sucedida. Carrega o valor produzido
      * @param data o valor real
      */
-    data class Sucess<T>(val data: T) : Result<T>()
+    data class Success<T>(val data: T) : Result<T>()
 
     /**
      * Operação falhou. Carrega a exception que causou a falha
